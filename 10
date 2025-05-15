@@ -1,0 +1,83 @@
+import argparse
+import sys
+
+def parse_args():
+    """
+    Define y parsea argumentos de línea de comandos.
+    Si se proporciona el peso en kilos (--kilos), se usa directamente;
+    si no, entra en modo interactivo.
+    """
+    parser = argparse.ArgumentParser(
+        description="Calcula el monto a pagar por manzanas con descuento según kilos comprados."
+    )
+    parser.add_argument('-k', '--kilos', type=float,
+                        help="Cantidad de kilos de manzanas (número real ≥ 0).")
+    return parser.parse_args()
+
+def get_kilos(manzanas):
+    """
+    Solicita al usuario un número real ≥ 0 mostrando `manzanas`.
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            val = float(input(manzanas))
+            if val < 0:
+                print("  ► Debe ingresar un valor no negativo.")
+            else:
+                return val
+        except ValueError:
+            print("  ► Entrada inválida. Por favor ingrese un número válido.")
+
+def calcular_descuento(kilos):
+    """
+    Devuelve el porcentaje de descuento (como número entre 0 y 1)
+    según la tabla:
+      0  –   2 kg   : 0%
+      >2 –   5 kg   : 10%
+      >5 –  10 kg   : 15%
+      ≥10 kg        : 20%
+    """
+    if kilos <= 2:
+        return 0.0
+    elif kilos <= 5:
+        return 0.10
+    elif kilos < 10:
+        return 0.15
+    else:
+        return 0.20
+
+def formatear_pesos(monto):
+    """Devuelve `monto` como cadena en pesos con separador de miles."""
+    return f"${monto:,.2f}"
+
+def main():
+    args = parse_args()
+
+    # Obtención de kilos: CLI o interactivo
+    if args.kilos is not None:
+        kilos = args.kilos
+        if kilos < 0:
+            print("Error: los kilos no pueden ser negativos.", file=sys.stderr)
+            sys.exit(1)
+    else:
+        kilos = get_kilos("Ingrese la cantidad de kilos de manzanas: ")
+
+    PRECIO_KILO = 4500.0  # precio base por kilo
+
+    pct_desc = calcular_descuento(kilos)
+    precio_unitario = PRECIO_KILO * (1 - pct_desc)
+    total = precio_unitario * kilos
+
+    # Salida
+    print("\nResumen de compra de manzanas")
+    print("-" * 30)
+    print(f"Kilos comprados       : {kilos:.2f} kg")
+    print(f"Precio por kilo (bruto): {formatear_pesos(PRECIO_KILO)}")
+    print(f"Descuento aplicado     : {pct_desc*100:.0f}%")
+    print(f"Precio por kilo (neto) : {formatear_pesos(precio_unitario)}")
+    print("-" * 30)
+    print(f"Total a pagar          : {formatear_pesos(total)}")
+
+if __name__ == "__main__":
+    main()
