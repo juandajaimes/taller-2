@@ -1,0 +1,24 @@
+def solicitar_clave(clave_correcta):
+    """
+    Solicita al usuario una cadena de texto mostrando `clave_correcta`.
+    """
+    return input(clave_correcta)
+
+def validar_clave(clave_introducida, clave_correcta="python123"):
+    """
+    Devuelve True si `clave_introducida` coincide con `clave_correcta`.
+    """
+    return clave_introducida == clave_correcta
+
+def main():
+    clave = ""
+    
+    # Repetir hasta que la clave sea correcta
+    while not validar_clave(clave):
+        clave = solicitar_clave("Ingrese la clave de acceso: ")#si la clave es incorrecta se informa al usuario
+        print("clave incorrecta")
+    # Al salir del bucle, la clave es correcta
+    print("Acceso concedido")
+
+if __name__ == "__main__":
+    main()
