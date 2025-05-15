@@ -1,0 +1,22 @@
+def doble_factorial(n):
+    resultado = 1
+    for i in range(n, 0, -2):
+        resultado *= i
+    return resultado
+
+def main():
+    while True:
+        try:
+            numero = int(input("Ingrese un número entero positivo: "))
+            if numero <= 0:
+                print("Por favor, ingrese un número mayor que cero.")
+                continue
+            break
+        except ValueError:
+            print("Entrada inválida. Intente nuevamente.")
+
+    resultado = doble_factorial(numero)
+    print(f"El doble factorial de {numero} es: {resultado}")
+
+if __name__ == "__main__":
+    main()
