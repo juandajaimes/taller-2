@@ -1,0 +1,84 @@
+import argparse
+import math
+import sys
+
+def parse_args():
+    """
+    Define y parsea los argumentos de línea de comandos.
+    Si no se proporciona la cantidad, se usará el modo interactivo.
+    """
+    parser = argparse.ArgumentParser(
+        description="Calcula la pérdida total por defectos en la producción de puertas."
+    )
+    parser.add_argument(
+        '-n', '--numero',
+        type=int,
+        help="Cantidad de puertas producidas (entero)."
+    )
+    return parser.parse_args()
+
+def get_int(prompt):
+    """
+    Solicita al usuario un entero mostrando `prompt`.
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print("  ► Entrada inválida. Por favor ingrese un número entero.")
+
+def calcular_defectuosas(total_producido, tasa_por_mil=14):
+    """
+    Calcula el número de puertas defectuosas.
+    Usa redondeo hacia arriba si el cálculo no es exacto.
+    
+    total_producido: cantidad total de unidades producidas
+    tasa_por_mil: cantidad de defectuosas por cada 1000 unidades
+    """
+    return math.ceil(total_producido * tasa_por_mil / 1000)
+
+def calcular_perdida(num_defectuosas, costo_unitario=180_000):
+    """
+    Calcula la pérdida total en pesos por las unidades defectuosas.
+    
+    num_defectuosas: cantidad de unidades defectuosas
+    costo_unitario: costo en pesos de cada puerta
+    """
+    return num_defectuosas * costo_unitario
+
+def formatear_numero(n):
+    """Devuelve el número `n` como cadena con separadores de miles."""
+    return f"{n:,}"
+
+def main():
+    args = parse_args()
+
+    # Obtención de la cantidad producida
+    if args.numero is not None:
+        total_puertas = args.numero
+        if total_puertas < 0:
+            print("La cantidad de puertas producidas no puede ser negativa.")
+            sys.exit(1)
+    else:
+        total_puertas = get_int("Ingrese la cantidad de puertas producidas: ")
+    
+    # Parámetros del problema
+    TASA_DEFECTO = 14        # defectuosas por cada 1000 puertas
+    COSTO_PUERTA = 180_000   # en pesos
+
+    # Cálculos
+    tot_defectuosas = calcular_defectuosas(total_puertas, TASA_DEFECTO)
+    perdida_total = calcular_perdida(tot_defectuosas, COSTO_PUERTA)
+
+    # Salida formateada
+    print("\nResumen de pérdidas por defectos")
+    print("-" * 30)
+    print(f"Total producido : {formatear_numero(total_puertas)} puertas")
+    print(f"Estimadas defectuosas (≈ {TASA_DEFECTO}/1000) : {formatear_numero(tot_defectuosas)} puertas")
+    print(f"Costo por unidad : ${formatear_numero(COSTO_PUERTA)}")
+    print("-" * 30)
+    print(f"Pérdida total     : ${formatear_numero(perdida_total)}")
+
+if __name__ == "__main__":
+    main()
