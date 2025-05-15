@@ -1,0 +1,55 @@
+def solicitar_calificacion(promedio_alumno_general):
+    """
+    Solicita al usuario una calificación (número real entre 0 y 10).
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            nota = float(input(promedio_alumno))
+            if 0.0 <= nota <= 10.0:
+                return nota
+            else:
+                print("  ► La calificación debe estar entre 0 y 10.")
+        except ValueError:
+            print("  ► Entrada inválida. Por favor ingrese un número.")
+
+def main():
+    total_alumnos = 10
+    materias_por_alumno = 5
+
+    suma_promedios = 0.0
+    count_aprobados = 0
+    count_reprobados = 0
+
+    alumno = 1
+    while alumno <= total_alumnos:
+        print(f"\nAlumno #{alumno}:")
+        suma_notas = 0.0
+        materia = 1
+
+        # Ciclo para las 5 materias de este alumno
+        while materia <= materias_por_alumno:
+            nota = solicitar_calificacion(f"  Nota materia {materia}: ")
+            suma_notas += nota
+            materia += 1
+
+        promedio_alumno = suma_notas / materias_por_alumno
+        suma_promedios += promedio_alumno
+
+        if promedio_alumno >= 7.0:
+            count_aprobados += 1
+        else:
+            count_reprobados += 1
+
+        alumno += 1
+
+    promedio_general = suma_promedios / total_alumnos
+
+    # Resultados finales
+    print("\n" + "-"*30)
+    print(f"Promedio general del grupo : {promedio_general:.2f}")
+    print(f"Alumnos aprobados (≥7.0)   : {count_aprobados}")
+    print(f"Alumnos reprobados (<7.0) : {count_reprobados}")
+
+if __name__ == "__main__":
+    main()
