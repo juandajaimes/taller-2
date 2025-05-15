@@ -1,0 +1,31 @@
+def get_int(numero_entero):
+    """
+    Solicita al usuario un entero mostrando `numero_entero`.
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            return int(input(numero_entero))
+        except ValueError:
+            print("Entrada inválida. Por favor ingrese un número entero.")
+
+def safe_division():
+    """
+    Solicita dos enteros, asegurándose de que el divisor no sea cero,
+    luego realiza la división y muestra el resultado.
+    """
+    numerador = get_int("Ingrese el numerador (entero): ")
+    
+    # Solicitar divisor hasta que sea distinto de cero
+    while True:
+        divisor = get_int("Ingrese el divisor (entero, distinto de 0): ")
+        if divisor == 0:
+            print("El divisor no puede ser 0. Intente de nuevo.")
+        else:
+            break
+
+    resultado = numerador / divisor
+    print(f"Resultado: {resultado}")
+
+if __name__ == "__main__":
+    safe_division()
