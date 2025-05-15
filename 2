@@ -1,0 +1,28 @@
+get_int(compare_numbers):
+    """
+    Solicita al usuario un entero mostrando `prompt`.
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            return int(input(compare_numbers))
+        except ValueError:
+            print("Entrada inválida. Por favor ingrese un número entero.")
+
+def compare_numbers(a, b):
+    """
+    Devuelve True si a > b, False en caso contrario.
+    """
+    return a > bdef
+
+def main():
+ 
+    num1 = get_int("Ingrese el primer número entero: ")
+    num2 = get_int("Ingrese el segundo número entero: ")
+    
+    
+    resultado = compare_numbers(num1, num2)
+    print(resultado)
+
+if __name__ == "__main__":
+    main()
