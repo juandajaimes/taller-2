@@ -1,0 +1,34 @@
+def solicitar_numero(msj: str) -> float:
+    """
+    Pidele al usuario un numero cualquiera.
+    Repite hasta consegir un valor valido.
+    """
+    while True:
+        entrada = input(msj)
+        try:
+            return float(entrada)
+        except  ValueError:
+            print("Entrada invalida.Por favor,ingrese un numero.")
+
+def calcular_propina(cantidad:float,porcentaje:float) -> float:
+    """
+    calcular la cantidad de la propina dando  la cantidad y porcentaje de la propina.
+    """
+    return cantidad * (porcentaje/100)
+  
+    
+def main() -> None:
+    """
+    Punto de entrada del programa:
+    solicita los datos, calcula y muestra la propina.
+    """
+    print("Bienvenido a al calculadora de propina")
+    total = solicitar_numero("Ingrese la cantidad total de la cuenta: ")  
+    pct = solicitar_numero("Ingrese el porcentaje de propina (%): ")
+    propina = calcular_propina(total, pct)
+    print(f"💰 Debes dejar una propina de: ${propina:.2f}")
+    print("Gracias por usar la calculadora de la propina")
+
+if __name__ == "__main__":
+    main()
+       
