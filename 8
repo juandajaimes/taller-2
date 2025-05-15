@@ -1,0 +1,77 @@
+import argparse
+import sys
+
+def parse_args():
+    """
+    Define y parsea los argumentos de línea de comandos.
+    Si se suministran los tres lados, se usan directamente; 
+    en caso contrario, el programa entra en modo interactivo.
+    """
+    parser = argparse.ArgumentParser(
+        description="Clasifica un triángulo según sus tres lados."
+    )
+    parser.add_argument('-a', type=int, help="Lado a (entero positivo)")
+    parser.add_argument('-b', type=int, help="Lado b (entero positivo)")
+    parser.add_argument('-c', type=int, help="Lado c (entero positivo)")
+    return parser.parse_args()
+
+def get_positive_int(prompt):
+    """
+    Solicita al usuario un entero positivo mostrando `prompt`.
+    Repite hasta que se ingrese un valor válido (> 0).
+    """
+    while True:
+        try:
+            value = int(input(prompt))
+            if value <= 0:
+                print("  ► Debe ser un número entero positivo.")
+            else:
+                return value
+        except ValueError:
+            print("  ► Entrada inválida. Por favor ingrese un número entero.")
+
+def validate_sides(a, b, c):
+    """
+    Verifica si los tres lados pueden formar un triángulo
+    usando la desigualdad triangular.
+    """
+    return (a + b > c) and (a + c > b) and (b + c > a)
+
+def classify_triangle(a, b, c):
+    """
+    Asume que (a, b, c) forman un triángulo válido.
+    Retorna uno de: "Equilátero", "Isósceles" o "Escaleno".
+    """
+    if a == b == c:
+        return "Equilátero"
+    if a == b or a == c or b == c:
+        return "Isósceles"
+    return "Escaleno"
+
+def main():
+    args = parse_args()
+
+    # Obtención de los lados: CLI o interactivo
+    if args.a and args.b and args.c:
+        lados = (args.a, args.b, args.c)
+        if any(side <= 0 for side in lados):
+            print("Error: todos los lados deben ser enteros positivos.", file=sys.stderr)
+            sys.exit(1)
+    else:
+        print("Modo interactivo: ingrese los tres lados del triángulo.")
+        lado1 = get_positive_int("  Lado 1: ")
+        lado2 = get_positive_int("  Lado 2: ")
+        lado3 = get_positive_int("  Lado 3: ")
+        lados = (lado1, lado2, lado3)
+
+    a, b, c = lados
+
+    # Validación y clasificación
+    if not validate_sides(a, b, c):
+        print("no se puede formar triangulo")
+    else:
+        tipo = classify_triangle(a, b, c)
+        print(tipo)
+
+if __name__ == "__main__":
+    main()
