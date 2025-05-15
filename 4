@@ -1,0 +1,31 @@
+def get_int(Altura):
+    """
+    Solicita al usuario un entero mostrando `altura`.
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            return int(input(Altura))
+        except ValueError:
+            print("Entrada inválida. Por favor ingrese un número entero.")
+
+def classify_height(height_cm):
+    """
+    Clasifica la altura en centímetros:
+    ≤150: Altura baja
+    151–170: Altura media
+    >170: Altura alta
+    """
+    if height_cm <= 150:
+        return "Altura baja"
+    elif height_cm <= 170:
+        return "Altura media"
+    else:
+        return "Altura alta"
+
+def main():
+    altura = get_int("Ingrese su altura en centímetros (entero): ")
+    print(classify_height(altura))
+
+if __name__ == "__main__":
+    main()
