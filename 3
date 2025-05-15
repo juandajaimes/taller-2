@@ -1,0 +1,30 @@
+def get_float(promedio):
+    """
+    Solicita al usuario un número real mostrando `prompt`.
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            return float(input(promedio))
+        except ValueError:
+            print("Entrada inválida. Por favor ingrese un número real.")
+
+def is_approved(grades):
+    """
+    Calcula el promedio de la lista `grades`.
+    Devuelve True si el promedio ≥ 3.0, False en caso contrario.
+    """
+    return sum(grades) / len(grades) >= 3.0
+
+def main():
+    # Pedimos las tres notas
+    n1 = get_float("Nota del primer parcial: ")
+    n2 = get_float("Nota del segundo parcial: ")
+    n3 = get_float("Nota del tercer parcial: ")
+
+    # Determinamos si está aprobado y mostramos solo el resultado
+    resultado = "aprobado" if is_approved([n1, n2, n3]) else "no aprobado"
+    print(resultado)
+
+if __name__ == "__main__":
+    main()
