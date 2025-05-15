@@ -1,0 +1,102 @@
+import argparse
+import sys
+
+def parse_args():
+    """
+    Define y parsea argumentos de línea de comandos:
+      --años     Edad en años (entero ≥ 0)
+      --meses    Meses adicionales (0–11)
+      --hg       Nivel de hemoglobina en g% (float ≥ 0)
+    Si faltan argumentos, entra en modo interactivo.
+    """
+    parser = argparse.ArgumentParser(
+        description="Diagnóstico de anemia según edad y nivel de hemoglobina."
+    )
+    parser.add_argument('-a', '--años',   type=int,   help="Edad en años (entero ≥ 0).")
+    parser.add_argument('-m', '--meses',  type=int,   help="Meses adicionales (0–11).")
+    parser.add_argument('-g', '--hg',     type=float, help="Nivel de hemoglobina en g% (≥ 0).")
+    return parser.parse_args()
+
+def get_int(prompt, min_val=0, max_val=None):
+    """Pide un entero entre min_val y max_val (inclusive)."""
+    while True:
+        try:
+            v = int(input(prompt))
+            if v < min_val or (max_val is not None and v > max_val):
+                rng = f"entre {min_val} y {max_val}" if max_val is not None else f"≥ {min_val}"
+                print(f"  ► Debe ser {rng}.")
+            else:
+                return v
+        except ValueError:
+            print("  ► Entrada inválida. Ingrese un entero.")
+
+def get_float(prompt, min_val=0.0):
+    """Pide un float ≥ min_val."""
+    while True:
+        try:
+            v = float(input(prompt))
+            if v < min_val:
+                print(f"  ► Debe ser ≥ {min_val}.")
+            else:
+                return v
+        except ValueError:
+            print("  ► Entrada inválida. Ingrese un número.")
+
+def edad_en_meses(años, meses):
+    """Convierte edad dada en años y meses a meses totales."""
+    return años * 12 + meses
+
+def rango_hg_normal(edad_meses):
+    """
+    Devuelve una tupla (mín, máx) del rango normal de hemoglobina (g%)
+    según la edad en meses.
+    Basado en:
+      0–1 mes       : 13.0–26.0
+      >1–6 meses    : 10.0–18.0
+      >6–12 meses   : 11.0–15.0
+      >12–60 meses  : 11.5–15.0
+      >60–120 meses : 12.6–15.5
+      >120–180 meses: 13.0–15.5
+    """
+    if edad_meses <= 1:
+        return 13.0, 26.0
+    if edad_meses <= 6:
+        return 10.0, 18.0
+    if edad_meses <= 12:
+        return 11.0, 15.0
+    if edad_meses <= 60:
+        return 11.5, 15.0
+    if edad_meses <= 120:
+        return 12.6, 15.5
+    # hasta 15 años = 180 meses
+    return 13.0, 15.5
+
+def diagnostico_anemia(años, meses, hg):
+    """
+    Devuelve "negativo" si hg está dentro del rango normal
+    para la edad dada, o "positivo" en caso contrario.
+    """
+    total_meses = edad_en_meses(años, meses)
+    low, high = rango_hg_normal(total_meses)
+    return "negativo" if low <= hg <= high else "positivo"
+
+def main():
+    args = parse_args()
+
+    # Lectura de datos: CLI o interactivo
+    if args.años is not None and args.meses is not None and args.hg is not None:
+        años, meses, hg = args.años, args.meses, args.hg
+        if años < 0 or meses < 0 or meses >= 12 or hg < 0:
+            print("Error: valores inválidos en argumentos.", file=sys.stderr)
+            sys.exit(1)
+    else:
+        print("Modo interactivo: ingrese edad y nivel de hemoglobina.")
+        años = get_int("  Años completos       : ", min_val=0)
+        meses = get_int("  Meses adicionales (0–11): ", min_val=0, max_val=11)
+        hg    = get_float("  Hemoglobina (g%): ", min_val=0.0)
+
+    # Solo imprimir diagnóstico
+    print(diagnostico_anemia(años, meses, hg))
+
+if __name__ == "__main__":
+    main()
