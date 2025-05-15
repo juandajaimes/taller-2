@@ -1,0 +1,40 @@
+def get_int(promocion_llantas):
+    """
+    Solicita al usuario un entero mostrando `promocion_llantas`.
+    Repite hasta que se ingrese un valor válido.
+    """
+    while True:
+        try:
+            n = int(input(promocion_llantas))
+            if n < 0:
+                print("Por favor ingrese un número no negativo.")
+            else:
+                return n
+        except ValueError:
+            print("Entrada inválida. Por favor ingrese un número entero.")
+
+def calcular_precio_unitario(cantidad):
+    """
+    Devuelve el precio unitario según la cantidad:
+    - Menos de 5 llantas: 30000
+    - De 5 a 10 llantas (inclusive): 25000
+    - Más de 10 llantas: 20000
+    """
+    if cantidad < 5:
+        return 30000
+    elif cantidad <= 10:
+        return 25000
+    else:
+        return 20000
+
+def main():
+    cantidad = get_int("Ingrese la cantidad de llantas a comprar: ")
+    precio_unitario = calcular_precio_unitario(cantidad)
+    total = cantidad * precio_unitario
+
+    # Mostrar resultados
+    print(f"Precio individual aplicado: ${precio_unitario:,}")
+    print(f"Valor total de la compra  : ${total:,}")
+
+if __name__ == "__main__":
+    main()
